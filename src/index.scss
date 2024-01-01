@@ -1,0 +1,27 @@
+$padding: 5px;
+
+@for $i from 1 through 5 {
+  .p-#{$i} {
+    padding: $padding * $i;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.App {
+  textarea {
+    resize: none;
+    width: 100%;
+    min-height: 300px;
+  }
+
+  padding: 1.5em;
+}
+
+a svg {
+  color: #fff;
+}
