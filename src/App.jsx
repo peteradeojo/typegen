@@ -9,6 +9,8 @@ function App() {
 
 	// const generateType = () =>  {}
 
+	const updateGen = (text) => text; //.replace(/\s+/, '&nbsp;');
+
 	const generateType = () => {
 		try {
 			const obj = JSON.parse(text);
@@ -16,7 +18,7 @@ function App() {
 			const infs = getInferences(obj, 1, 1);
 			const t = collator(infs, 'TYPE');
 
-			setGen(t);
+			setGen(updateGen(t));
 		} catch (err) {
 			setGen(err.message);
 		}
@@ -28,7 +30,7 @@ function App() {
 				<div className="row">
 					<div>
 						<h1>Type Generator</h1>
-            <small>Give the repo a ⭐️</small>
+						<small>if you like it, give the repo a ⭐️?</small>
 					</div>
 					<div className="navList">
 						<a
@@ -54,7 +56,7 @@ function App() {
 						className="p-2"
 						value={text}
 						onChange={(e) => setText(e.target.value)}
-            placeholder='{"message": "Paste JSON schema"}'
+						placeholder='{"message": "Paste JSON schema"}'
 					>
 						{text}
 					</textarea>
