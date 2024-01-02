@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { getInferences, collator } from './generator.js';
+import { generateTypes, serialize } from './generator.js';
 import Github from '@mui/icons-material/GitHub.js';
 import Twitter from '@mui/icons-material/Twitter.js';
 
 function App() {
 	const [text, setText] = useState('');
 	const [gen, setGen] = useState('');
-
-	// const generateType = () =>  {}
+	const [typeName, setType] = useState('HoeMath');
 
 	const updateGen = (text) => text; //.replace(/\s+/, '&nbsp;');
 
@@ -15,10 +14,8 @@ function App() {
 		try {
 			const obj = JSON.parse(text);
 
-			const infs = getInferences(obj, 1, 1);
-			const t = collator(infs, 'TYPE');
-
-			setGen(updateGen(t));
+			const t = serialize(generateTypes(obj));
+			setGen(`type ${typeName} = ` + t);
 		} catch (err) {
 			setGen(err.message);
 		}
@@ -52,15 +49,32 @@ function App() {
 				</div>
 				<div className="p-2"></div>
 				<div>
-					<textarea
-						className="p-2"
-						value={text}
-						onChange={(e) => setText(e.target.value)}
-						placeholder='{"message": "Paste JSON schema"}'
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							generateType();
+						}}
 					>
-						{text}
-					</textarea>
-					<button onClick={generateType}>Generate</button>
+						<input
+							type="text"
+							className="form-control"
+							placeholder="Name"
+							onInput={(e) => setType(e.target.value)}
+              value={typeName}
+							required
+						/>
+						<div className="p-1"></div>
+						<textarea
+							className="p-2"
+							value={text}
+							onChange={(e) => setText(e.target.value)}
+							placeholder='{"message": "Paste JSON schema"}'
+							required
+						>
+							{text}
+						</textarea>
+						<button type="submit">Generate</button>
+					</form>
 				</div>
 				<div className="p-1"></div>
 				<textarea className="p-2" defaultValue={gen}></textarea>

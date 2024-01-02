@@ -1,53 +1,92 @@
-export const getInferences = (obj, levels = 1, level = 1) => {
-  if (Array.isArray(obj)) {
-    return getInferences(obj[0], level);
-  }
+const checkIsArray = (item) =>
+	typeof item == 'object' ? (Array.isArray(item) ? 1 : 0) : -1;
 
-	const inferences = [];
-	for (let k of Object.keys(obj)) {
-		inferences.push({
-			name: k,
-			type: typeof obj[k],
-			level,
-			inferred:
-				typeof obj[k] == 'object' && level <= levels
-					? getInferences(obj[k], level + 1)
-					: false,
-		});
+const generateObjectType = (item) => {
+	let text = '{';
+	for (let i of Object.keys(item)) {
+		text += `${i}: ` + generateType(item[i]) + ';';
 	}
 
-	return inferences;
+	return text + '}';
 };
 
-export const compress = (inference, atLevel = 0) => {
-	if (!Array.isArray(inference)) {
-		let t = `${'  '.repeat(inference.level)}${inference.name}:`;
-		if (inference.inferred != false) {
-			t += ' ' + compress(inference.inferred, atLevel + 1);
-		} else {
-			t += ` ${inference.type};\n`;
+/**
+ *
+ * @param {Array} item
+ */
+const generateArrayType = (item) => {
+	// package types into set for uniqueness
+	const set = new Set();
+	item.forEach((i) => {
+		if (checkIsArray(i) == -1) {
+			// Prims
+			return set.add(typeof i);
+		}
+		if (checkIsArray(i) == 1) {
+			// Arrays
+			return set.add(generateArrayType(i));
 		}
 
-		return t;
-	}
+		// Objects
+		return set.add(generateObjectType(i));
+	});
 
-	let t = '{\n';
-	for (let i of inference) {
-		t += compress(i, atLevel + 1);
-	}
-
-	t += ' '.repeat(atLevel) + '}\n';
-
-	return t;
+	// return single string of types
+	let types = [];
+	set.forEach((t) => (t != undefined ? types.push(t) : null));
+	return 'Array<' + types.join('|') + '>';
 };
 
-export const collator = (inferences, name = "TYPE") => {
-	let infer = `type ${name} = {\n`;
-
-	for (let i of inferences) {
-		infer += compress(i, i.level);
+const generateType = (item) => {
+	const isArray = checkIsArray(item);
+	if (isArray == 1) {
+		return generateArrayType(item);
 	}
 
-	infer += '}';
-	return infer;
+	if (isArray == 0) {
+		return generateObjectType(item);
+	}
+	return typeof item;
+};
+
+export const generateTypes = (item) => {
+	if (checkIsArray(item) == 0) {
+		const types = [];
+		for (let i of Object.keys(item)) {
+			types.push({ key: i, type: generateType(item[i]) });
+		}
+
+		return types;
+	}
+
+	if (checkIsArray(item) == 1) {
+		const types = [];
+		for (let i of item) {
+			types.push({ key: i, type: generateType(i) });
+		}
+		return types;
+	}
+
+	return generateType(item);
+};
+
+/**
+ *
+ * @param {Array<{key: string, type: string|Array<any}>} typedef
+ */
+export const serialize = (typedef) => {
+	let text = '{\n';
+	const f = (typedef) => {
+		if (checkIsArray(typedef.type) == 1) {
+			return serialize(typedef.type);
+		}
+
+		return `${typedef.key}: ${typedef.type};\n`;
+	};
+
+	for (let i of typedef) {
+		text += f(i);
+	}
+
+	return text + '}';
 };

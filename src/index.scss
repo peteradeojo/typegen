@@ -6,6 +6,11 @@ $padding: 5px;
   }
 }
 
+.form-control {
+  width: 100%;
+  padding: $padding;
+}
+
 .row {
   display: flex;
   justify-content: space-between;
