@@ -2,9 +2,9 @@ const checkIsArray = (item) =>
 	typeof item == 'object' ? (Array.isArray(item) ? 1 : 0) : -1;
 
 const generateObjectType = (item) => {
-	let text = '{';
+	let text = '{\n';
 	for (let i of Object.keys(item)) {
-		text += `${i}: ` + generateType(item[i]) + ';';
+		text += `${i}: ` + generateType(item[i]) + ';\n';
 	}
 
 	return text + '}';
@@ -37,7 +37,7 @@ const generateArrayType = (item) => {
 	return 'Array<' + types.join('|') + '>';
 };
 
-const generateType = (item) => {
+export const generateType = (item) => {
 	const isArray = checkIsArray(item);
 	if (isArray == 1) {
 		return generateArrayType(item);
@@ -49,44 +49,46 @@ const generateType = (item) => {
 	return typeof item;
 };
 
-export const generateTypes = (item) => {
-	if (checkIsArray(item) == 0) {
-		const types = [];
-		for (let i of Object.keys(item)) {
-			types.push({ key: i, type: generateType(item[i]) });
-		}
+// OBSOLETE
+// export const generateTypes = (item) => {
+// 	if (checkIsArray(item) == 0) {
+// 		const types = [];
+// 		for (let i of Object.keys(item)) {
+// 			types.push({ key: i, type: generateType(item[i]) });
+// 		}
 
-		return types;
-	}
+// 		return types;
+// 	}
 
-	if (checkIsArray(item) == 1) {
-		const types = [];
-		for (let i of item) {
-			types.push({ key: i, type: generateType(i) });
-		}
-		return types;
-	}
+// 	if (checkIsArray(item) == 1) {
+// 		const types = [];
+// 		for (let i of item) {
+// 			types.push({ key: i, type: generateType(i) });
+// 		}
+// 		return types;
+// 	}
 
-	return generateType(item);
-};
+// 	return generateType(item);
+// };
 
 /**
  *
  * @param {Array<{key: string, type: string|Array<any}>} typedef
  */
-export const serialize = (typedef) => {
-	let text = '{\n';
-	const f = (typedef) => {
-		if (checkIsArray(typedef.type) == 1) {
-			return serialize(typedef.type);
-		}
+// ALSO OBSOLETE
+// export const serialize = (typedef) => {
+// 	let text = '{\n';
+// 	const f = (typedef) => {
+// 		if (checkIsArray(typedef.type) == 1) {
+// 			return serialize(typedef.type);
+// 		}
 
-		return `${typedef.key}: ${typedef.type};\n`;
-	};
+// 		return `${typedef.key}: ${typedef.type};\n`;
+// 	};
 
-	for (let i of typedef) {
-		text += f(i);
-	}
+// 	for (let i of typedef) {
+// 		text += f(i);
+// 	}
 
-	return text + '}';
-};
+// 	return text + '}';
+// };

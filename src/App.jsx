@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { generateTypes, serialize } from './generator.js';
+import { generateTypes, serialize, generateType as generate } from './generator.js';
 import Github from '@mui/icons-material/GitHub.js';
 import Twitter from '@mui/icons-material/Twitter.js';
 
@@ -14,7 +14,7 @@ function App() {
 		try {
 			const obj = JSON.parse(text);
 
-			const t = serialize(generateTypes(obj));
+			const t = generate(obj);
 			setGen(`type ${typeName} = ` + t);
 		} catch (err) {
 			setGen(err.message);
