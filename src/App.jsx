@@ -1,21 +1,29 @@
 import { useState } from 'react';
-import { generateTypes, serialize, generateType as generate } from './generator.js';
+import { generateType as generate } from './generator.js';
 import Github from '@mui/icons-material/GitHub.js';
 import Twitter from '@mui/icons-material/Twitter.js';
+
+import prettier from 'prettier/standalone';
+import typescript from 'prettier/plugins/typescript';
+import estree from 'prettier/plugins/estree'
 
 function App() {
 	const [text, setText] = useState('');
 	const [gen, setGen] = useState('');
 	const [typeName, setType] = useState('HoeMath');
 
-	const updateGen = (text) => text; //.replace(/\s+/, '&nbsp;');
-
 	const generateType = () => {
 		try {
 			const obj = JSON.parse(text);
 
 			const t = generate(obj);
-			setGen(`type ${typeName} = ` + t);
+			prettier
+				.format(`type ${typeName} = ` + t, {
+					parser: 'typescript',
+					plugins: [typescript, estree],
+				})
+				.then((s) => setGen(s))
+				.catch((err) => setGen(err));
 		} catch (err) {
 			setGen(err.message);
 		}
@@ -60,7 +68,7 @@ function App() {
 							className="form-control"
 							placeholder="Name"
 							onInput={(e) => setType(e.target.value)}
-              value={typeName}
+							value={typeName}
 							required
 						/>
 						<div className="p-1"></div>
@@ -77,7 +85,7 @@ function App() {
 					</form>
 				</div>
 				<div className="p-1"></div>
-				<textarea className="p-2" defaultValue={gen}></textarea>
+				<textarea className="p-2" value={gen} readOnly></textarea>
 			</div>
 		</>
 	);
