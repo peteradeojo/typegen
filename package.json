@@ -14,9 +14,11 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.2",
+    "@peteradeojo/typegencli": "^0.5.0",
     "prettier": "^3.1.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "typegen-generator": "^1.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
