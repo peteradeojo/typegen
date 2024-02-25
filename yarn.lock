@@ -3117,10 +3117,10 @@ typegen-generator@^0.0.3:
   dependencies:
     prettier "^3.2.5"
 
-typegen-generator@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/typegen-generator/-/typegen-generator-1.2.1.tgz#d328ad143c4ba9ce88a27f5b6dafde3fc034b935"
-  integrity sha512-xjX6SaiI30GQhwWXsda43F7qpZOaE+W+/1wKxdBVxhBtsXD0XO1E3O4ZiXc9Qy90tg/+i3s5StiHWtUSiRSlSw==
+typegen-generator@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/typegen-generator/-/typegen-generator-1.2.3.tgz#eee6e2dfa3697bcb49028043b5d4e7b574842576"
+  integrity sha512-U0BLQySt7kqmWSX1dZKQ08l2CNHCfhy8GMEL0XogZUYXvs98q6DIS2iwo6UDJKXWg+63EUbW+DwWLStEAmiVPw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"
