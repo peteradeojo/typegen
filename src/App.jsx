@@ -12,11 +12,13 @@ function App() {
 	const [text, setText] = useState('');
 	const [gen, setGen] = useState('');
 	const [typeName, setType] = useState('');
+	const re = new RegExp('(null|undefined)', 'ig');
 
 	const generateType = () => {
 		try {
 			const generator = new Generator();
-			const obj = JSON.parse(text);
+			const obj = JSON.parse(text.replace(re, '{}'));
+			setText(text.replace(re, '{}'));
 			const t = generator.resolve(obj, typeName);
 
 			prettier
@@ -28,6 +30,7 @@ function App() {
 				.catch((err) => setGen(err));
 			// setGen(t);
 		} catch (err) {
+			console.error(err);
 			setGen(err.message);
 		}
 	};
